@@ -1,5 +1,7 @@
 package solids;
 
+import java.awt.Color;
+
 import transforms.Point3D;
 
 public class Cube extends SolidBase {
@@ -59,4 +61,22 @@ public class Cube extends SolidBase {
     public Point3D getCentroid() {
     	return centroid;
     }
+
+	@Override
+	public int getColorByTriangleVertice(int index) {
+		return getColor(index/6).getRGB();
+	}  
+	
+	private Color getColor(int index) {
+		switch (index) {
+			case 0 : return Color.BLUE;
+			case 1 : return Color.CYAN;
+			case 2 : return Color.YELLOW;
+			case 3 : return Color.GREEN;
+			case 4 : return Color.RED; 
+			case 5 : return Color.ORANGE;
+			default : throw new IllegalArgumentException("Unsupported inbdex: " + index);
+			
+		}
+	}
 }

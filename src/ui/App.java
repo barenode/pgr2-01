@@ -22,7 +22,7 @@ import solids.Solid;
 import transforms.*;
 import utils.Transformer;
 
-public class PgrfWireFrame extends JFrame {
+public class App extends JFrame {
 
     static int FPS = 1000 / 30;
     static int width = 800;
@@ -30,7 +30,8 @@ public class PgrfWireFrame extends JFrame {
     private JPanel panel;
     private BufferedImage img;
 
-    private Transformer transformer;
+//    private Transformer transformer;
+    private Scene scene;
     private Camera camera;
     private List<Solid> solids;
     
@@ -39,7 +40,7 @@ public class PgrfWireFrame extends JFrame {
     private int beginX, beginY; // ovládání myší
 
     public static void main(String[] args) {
-        PgrfWireFrame frame = new PgrfWireFrame();
+        App frame = new App();
         frame.init(width, height);
     }
 
@@ -55,13 +56,14 @@ public class PgrfWireFrame extends JFrame {
         add(panel);
         solids = new ArrayList<>();
 
-        transformer = new Transformer(img);
+        scene = new Scene(img);
         camera = new Camera();
-        camera = camera.withPosition(new Vec3D(-6.6, -3.3,4.5));
+        camera = camera.withPosition(new Vec3D(-6.6, -3.3, 4.5));
         camera = camera.withZenith(-0.549);
         camera = camera.withAzimuth(0.5);
-        transformer.setProjection(
-                new Mat4PerspRH(1,1,1,100));
+        
+        scene.setProjection(
+        	new Mat4PerspRH(1,1,1,100));
 
         // vytvoření objektů
         initSolids();
@@ -167,15 +169,15 @@ public class PgrfWireFrame extends JFrame {
         // TODO transformer - clear zBuffer !
 
         // transformer.setModel() todo
-        transformer.clear();
-        transformer.setView(camera.getViewMatrix());
+        scene.clear();
+        scene.setView(camera.getViewMatrix());
 
         solids.get(1).transform(rot);
         
         for (Solid solid : solids) {
             // TODO if na drát / model
-            transformer.drawFilledFrame(solid);
-            transformer.drawWireFrame(solid); // výkres solids
+        	scene.draw(solid);
+//        	scene.drawWireFrame(solid); // výkres solids
         }
 
         panel.getGraphics().drawImage(img, 0, 0, null);
