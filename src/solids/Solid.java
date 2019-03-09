@@ -3,6 +3,7 @@ package solids;
 import static java.util.stream.Collectors.toList;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import transforms.Mat4;
@@ -33,5 +34,7 @@ public interface Solid {
     	}).collect(toList());
     	getVertices().clear();
     	getVertices().addAll(transformed);
-    }        
+    }  
+    
+    BufferedImage getTexture();
 }

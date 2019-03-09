@@ -13,15 +13,15 @@ import java.util.Optional;
  */
 
 public class Vec3D {
-	public final double x, y, z;
+	public final double x, y, z, u, v;
 
 	/**
 	 * Creates a zero vector
 	 */
 	public Vec3D() {
-		x = y = z = 0.0f;
+		x = y = z = u = v = 0.0f;
 	}
-
+	
 	/**
 	 * Creates a vector with the given coordinates
 	 * 
@@ -36,6 +36,15 @@ public class Vec3D {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		u = v = 0.0f;
+	}
+
+	public Vec3D(final double x, final double y, final double z, final double u, final double v) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.u = u;
+		this.v = v;
 	}
 
 	/**
@@ -48,6 +57,8 @@ public class Vec3D {
 		this.x = value;
 		this.y = value;
 		this.z = value;
+		this.u = value;
+		this.v = value;
 	}
 
 	/**
@@ -56,10 +67,12 @@ public class Vec3D {
 	 * @param v
 	 *            vector to be cloned
 	 */
-	public Vec3D(final Vec3D v) {
-		x = v.x;
-		y = v.y;
-		z = v.z;
+	public Vec3D(final Vec3D vec) {
+		x = vec.x;
+		y = vec.y;
+		z = vec.z;
+		u = vec.u;
+		v = vec.v;
 	}
 
 	/**
@@ -73,6 +86,8 @@ public class Vec3D {
 		x = point.getX();
 		y = point.getY();
 		z = point.getZ();
+		u = point.getU();
+		v = point.getV();
 	}
 	
 	/**
@@ -87,6 +102,8 @@ public class Vec3D {
 		x = array[0];
 		y = array[1];
 		z = array[2];
+		u = array[3];
+		v = array[4];
 	}
 
 	/**
@@ -114,6 +131,15 @@ public class Vec3D {
 	 */
 	public double getZ() {
 		return z;
+	}	
+	
+
+	public double getU() {
+		return u;
+	}
+
+	public double getV() {
+		return v;
 	}
 
 	/**
@@ -125,7 +151,7 @@ public class Vec3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D withX(double x) {
-		return new Vec3D(x, this.getY(), this.getZ());
+		return new Vec3D(x, this.getY(), this.getZ(), u, v);
 	}
 	
 	/**
@@ -137,7 +163,7 @@ public class Vec3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D withY(double y) {
-		return new Vec3D(this.getX(), y, this.getZ());
+		return new Vec3D(this.getX(), y, this.getZ(), u, v);
 	}
 
 	/**
@@ -149,7 +175,7 @@ public class Vec3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D withZ(double z) {
-		return new Vec3D(this.getX(), this.getY(), z);
+		return new Vec3D(this.getX(), this.getY(), z, u, v);
 	}
 	
 	/**
@@ -169,8 +195,8 @@ public class Vec3D {
 	 *            vector to add
 	 * @return new Vec3D instance
 	 */
-	public Vec3D add(final Vec3D v) {
-		return new Vec3D(x + v.x, y + v.y, z + v.z);
+	public Vec3D add(final Vec3D vec) {
+		return new Vec3D(x + vec.x, y + vec.y, z + vec.z, u, v);
 	}
 
 	/**
@@ -180,8 +206,8 @@ public class Vec3D {
 	 *            vector to subtract
 	 * @return new Vec3D instance
 	 */
-	public Vec3D sub(final Vec3D v) {
-		return new Vec3D(x - v.x, y - v.y, z - v.z);
+	public Vec3D sub(final Vec3D vec) {
+		return new Vec3D(x - vec.x, y - vec.y, z - vec.z, u, v);
 	}
 	
 	/**
@@ -192,7 +218,7 @@ public class Vec3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D mul(final double d) {
-		return new Vec3D(x * d, y * d, z * d);
+		return new Vec3D(x * d, y * d, z * d, u, v);
 	}
 
 	/**
@@ -207,7 +233,8 @@ public class Vec3D {
 		return new Vec3D(
 			m.mat[0][0] * x + m.mat[1][0] * y + m.mat[2][0] * z,
 			m.mat[0][1] * x + m.mat[1][1] * y + m.mat[2][1] * z,
-			m.mat[0][2] * x + m.mat[1][2] * y + m.mat[2][2] * z);
+			m.mat[0][2] * x + m.mat[1][2] * y + m.mat[2][2] * z,
+			u, v);
 	}
 
 	/**
@@ -219,7 +246,7 @@ public class Vec3D {
 	 */
 	public Vec3D mul(final Quat q) {
 		final Quat p = q.mulR(new Quat(0, x, y, z)).mulR(q.inverse());
-		return new Vec3D(p.i, p.j, p.k);
+		return new Vec3D(p.i, p.j, p.k, u, v);
 	}
 
 	/**
@@ -229,8 +256,8 @@ public class Vec3D {
 	 *            3D vector 
 	 * @return new Vec3D instance
 	 */
-	public Vec3D mul(final Vec3D v) {
-		return new Vec3D(x * v.x, y * v.y, z * v.z);
+	public Vec3D mul(final Vec3D vec) {
+		return new Vec3D(x * vec.x, y * vec.y, z * vec.z, u, v);
 	}
 
 	/**
@@ -253,9 +280,14 @@ public class Vec3D {
 	 *            3D vector
 	 * @return new Vec3D instance
 	 */
-	public Vec3D cross(final Vec3D v) {
-		return new Vec3D(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y
-				* v.x);
+	public Vec3D cross(final Vec3D vec) {
+		return new Vec3D(
+			y * vec.z - z * vec.y, 
+			z * vec.x - x * vec.z,
+			x * vec.y - y* vec.x,
+			u,
+			v
+		);
 	}
 
 	/**
@@ -268,7 +300,7 @@ public class Vec3D {
 		final double len = length();
 		if (len == 0.0)
 			return Optional.empty();
-		return Optional.of(new Vec3D(x / len, y / len, z / len));
+		return Optional.of(new Vec3D(x / len, y / len, z / len, u, v));
 	}
 
 	/**
@@ -277,7 +309,7 @@ public class Vec3D {
 	 * @return new Vec2D instance
 	 */
 	public Vec3D opposite() {
-		return new Vec3D(-x, -y, -z);
+		return new Vec3D(-x, -y, -z, u, v);
 	}
 
 	/**

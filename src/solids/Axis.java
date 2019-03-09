@@ -1,6 +1,7 @@
 package solids;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import transforms.Point3D;
 
@@ -34,4 +35,10 @@ public class Axis extends SolidBase {
     public Point3D getCentroid() {
     	return centroid;
     }
+
+	@Override
+	public BufferedImage getTexture() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

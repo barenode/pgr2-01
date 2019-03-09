@@ -97,7 +97,7 @@ public class Cubic {
 	 */
 	public Point3D compute(final double param) {
 		final double t = param > 0 ? param < 1 ? param : 1 : 0; 
-		final Point3D res = new Point3D(t * t * t, t * t, t, 1).mul(controlMat);
+		final Point3D res = new Point3D(t * t * t, t * t, t, 1, 0, 0).mul(controlMat);
 		return new Point3D(res.ignoreW());
 	}
 

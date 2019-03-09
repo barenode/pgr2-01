@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -19,6 +20,7 @@ import javax.swing.WindowConstants;
 import solids.Axis;
 import solids.Cube;
 import solids.Solid;
+import solids.Triangel;
 import transforms.*;
 import utils.Transformer;
 
@@ -123,12 +125,14 @@ public class App extends JFrame {
     }
 
     private Mat4 rotation(Solid solid) {
-		return
-			new Mat4Transl(-solid.getCentroid().getX(), -solid.getCentroid().getY(), -solid.getCentroid().getZ()).mul(	
-			new Mat4RotZ(randomDouble(Math.PI / 100))).mul(
-			new Mat4RotY(randomDouble(Math.PI / 100))).mul(
-			new Mat4RotX(randomDouble(Math.PI / 100))).mul(
-			new Mat4Transl(solid.getCentroid().getX(), solid.getCentroid().getY(), solid.getCentroid().getZ()));
+    	
+		return new Mat4RotZ(randomDouble(Math.PI / 100));
+		
+//			new Mat4Transl(-solid.getCentroid().getX(), -solid.getCentroid().getY(), -solid.getCentroid().getZ()).mul(	
+//			new Mat4RotZ(randomDouble(Math.PI / 100))).mul(
+//			new Mat4RotY(randomDouble(Math.PI / 100))).mul(
+//			new Mat4RotX(randomDouble(Math.PI / 100))).mul(
+//			new Mat4Transl(solid.getCentroid().getX(), solid.getCentroid().getY(), solid.getCentroid().getZ()));
 	}
     
     private static final Random random = new Random();	
@@ -138,9 +142,10 @@ public class App extends JFrame {
     
     private void initSolids() {
         // todo více objektů
-        solids.add(new Axis());
-        
-        Cube cube = new Cube(1);
+        //solids.add(new Axis());
+    	//Triangel triangel = new Triangel(1, loadTexture("texture-metal"));
+    	
+        Cube cube = new Cube(1, loadTexture("texture-metal"));
         rot = rotation(cube);
         
         solids.add(cube);
@@ -162,6 +167,15 @@ public class App extends JFrame {
 //        }
 
     }
+    
+	
+	private BufferedImage loadTexture(String name) {
+		try {
+			return ImageIO.read(Scene.class.getResourceAsStream("/" + name + ".jpg"));
+		} catch (Exception e) {
+			throw new IllegalStateException("Unable to load texture: " + e.getMessage(), e);
+		}
+	}
 
     private void draw() {
         // clear
@@ -172,7 +186,7 @@ public class App extends JFrame {
         scene.clear();
         scene.setView(camera.getViewMatrix());
 
-        solids.get(1).transform(rot);
+        solids.get(0).transform(rot);
         
         for (Solid solid : solids) {
             // TODO if na drát / model

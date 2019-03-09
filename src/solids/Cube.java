@@ -1,6 +1,7 @@
 package solids;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import transforms.Point3D;
 
@@ -18,19 +19,25 @@ public class Cube extends SolidBase {
 
 	private Point3D centroid;
 	
-    public Cube(double size){
-
-        vertices.add(new Point3D(0, 0, 0));
-        vertices.add(new Point3D(size, 0, 0));
-        vertices.add(new Point3D(size, size, 0));
-        vertices.add(new Point3D(0, size, 0));
-
-        vertices.add(new Point3D(0, 0, size));
-        vertices.add(new Point3D(size, 0, size));
-        vertices.add(new Point3D(size, size, size));
-        vertices.add(new Point3D(0, size, size));        
+	private final BufferedImage texture;
+	
+    public Cube(double size, BufferedImage texture) {
+    	super();
+    	this.texture = texture;
+    	
+    	/*0*/vertices.add(new Point3D(0, 	0, 		0, 		0, 0));
+    	/*1*/vertices.add(new Point3D(size, 0, 		0, 		texture.getWidth(), 0));
+    	/*2*/vertices.add(new Point3D(size, size, 	0, 		texture.getWidth(), texture.getHeight()));
+    	/*3*/vertices.add(new Point3D(0, 	size, 	0,		0, texture.getHeight()));
+    	/*4*/vertices.add(new Point3D(0, 	0, 		size,	0, texture.getHeight()));
+    	/*5*/vertices.add(new Point3D(size, 0, 		size,	0, 0));        
+    	/*6*/vertices.add(new Point3D(size, size, 	size,	texture.getWidth(), 0));
+    	/*7*/vertices.add(new Point3D(0, 	size,	size,	texture.getWidth(), texture.getHeight()));        
         
-        vertices.add(centroid = new Point3D(size/2, size/2, size/2));
+    	/*C*/vertices.add(centroid = new Point3D(size/2, size/2, size/2));
+    	
+    	
+    	
 
 //        for (int i = 0; i < 4; i++) { // hrany
 //            indicesLine.add(i); indicesLine.add((i + 1) % 4);
@@ -42,20 +49,20 @@ public class Cube extends SolidBase {
         indicesTriangle.add(0); indicesTriangle.add(1); indicesTriangle.add(2); 
         indicesTriangle.add(0); indicesTriangle.add(2); indicesTriangle.add(3);
 
-        indicesTriangle.add(0); indicesTriangle.add(1); indicesTriangle.add(5); //předek
-        indicesTriangle.add(0); indicesTriangle.add(4); indicesTriangle.add(5);
-
-        indicesTriangle.add(1); indicesTriangle.add(2); indicesTriangle.add(6); //vpravo
-        indicesTriangle.add(1); indicesTriangle.add(5); indicesTriangle.add(6);
-
-        indicesTriangle.add(2); indicesTriangle.add(3); indicesTriangle.add(7); //vzadu
-        indicesTriangle.add(2); indicesTriangle.add(6); indicesTriangle.add(7);
-
-        indicesTriangle.add(3); indicesTriangle.add(0); indicesTriangle.add(4); //vlevo
-        indicesTriangle.add(3); indicesTriangle.add(4); indicesTriangle.add(7);
-
-        indicesTriangle.add(4); indicesTriangle.add(5); indicesTriangle.add(6); //vršek
-        indicesTriangle.add(4); indicesTriangle.add(6); indicesTriangle.add(7);
+        indicesTriangle.add(5); indicesTriangle.add(6); indicesTriangle.add(7); //předek
+        indicesTriangle.add(4); indicesTriangle.add(5); indicesTriangle.add(7);
+//
+        indicesTriangle.add(1); indicesTriangle.add(2); indicesTriangle.add(5); //vpravo
+        indicesTriangle.add(2); indicesTriangle.add(6); indicesTriangle.add(5);
+//
+        indicesTriangle.add(6); indicesTriangle.add(2); indicesTriangle.add(3); //vzadu
+        indicesTriangle.add(3); indicesTriangle.add(7); indicesTriangle.add(6);
+//
+        indicesTriangle.add(0); indicesTriangle.add(3); indicesTriangle.add(7); //vlevo
+        indicesTriangle.add(0); indicesTriangle.add(4); indicesTriangle.add(7);
+//
+        indicesTriangle.add(1); indicesTriangle.add(4); indicesTriangle.add(5); //vršek
+        indicesTriangle.add(1); indicesTriangle.add(0); indicesTriangle.add(4);
     }
     
     public Point3D getCentroid() {
@@ -78,5 +85,10 @@ public class Cube extends SolidBase {
 			default : throw new IllegalArgumentException("Unsupported inbdex: " + index);
 			
 		}
+	}
+
+	@Override
+	public BufferedImage getTexture() {
+		return texture;
 	}
 }
