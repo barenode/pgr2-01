@@ -14,7 +14,8 @@ import java.util.Optional;
 public class Point3D {
 	
 	public final double x, y, z, w, u, v;
-
+	public final double w1 = 1.0;
+	
 	/**
 	 * Creates a homogeneous point representing the origin 
 	 */
@@ -181,6 +182,10 @@ public class Point3D {
 	public double getV() {
 		return v;
 	}
+	
+	public double getW1() {
+		return w1;
+	}
 
 	
 	/**
@@ -299,7 +304,7 @@ public class Point3D {
 	public Optional<Vec3D> dehomog() {
 		if (w == 0.0)
 			return Optional.empty();
-		return Optional.of(new Vec3D(x / w, y / w, z / w, u, v));
+		return Optional.of(new Vec3D(x / w, y / w, z / w, u / w, v / w, w1 / w));
 	}
 
 	/**
@@ -309,7 +314,7 @@ public class Point3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D ignoreW() {
-		return new Vec3D(x, y, z, u, v);
+		return new Vec3D(x, y, z, u, v, 1.0f);
 	}
 	
 	/**

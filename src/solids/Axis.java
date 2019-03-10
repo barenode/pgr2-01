@@ -6,18 +6,14 @@ import java.awt.image.BufferedImage;
 import transforms.Point3D;
 
 public class Axis extends SolidBase {
-
-	private Point3D centroid;
 	
     public Axis(){
         vertices.add(new Point3D(0,0,0));
-        vertices.add(new Point3D(1,0,0));
-        vertices.add(new Point3D(0,1,0));
-        vertices.add(new Point3D(0,0,1));
-        
-        vertices.add(centroid = new Point3D(0, 0, 0));
+        vertices.add(new Point3D(3,0,0));
+        vertices.add(new Point3D(0,3,0));
+        vertices.add(new Point3D(0,0,3));       
 
-        indicesLine.add(0); indicesLine.add(1);
+        //indicesLine.add(0); indicesLine.add(1);
         indicesLine.add(0); indicesLine.add(2);
         indicesLine.add(0); indicesLine.add(3);
     }
@@ -33,12 +29,11 @@ public class Axis extends SolidBase {
     }
     
     public Point3D getCentroid() {
-    	return centroid;
+    	return vertices.get(0);
     }
 
 	@Override
 	public BufferedImage getTexture() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -25,25 +25,24 @@ public class Cube extends SolidBase {
     	super();
     	this.texture = texture;
     	
-    	/*0*/vertices.add(new Point3D(0, 	0, 		0, 		0, 0));
-    	/*1*/vertices.add(new Point3D(size, 0, 		0, 		texture.getWidth(), 0));
-    	/*2*/vertices.add(new Point3D(size, size, 	0, 		texture.getWidth(), texture.getHeight()));
-    	/*3*/vertices.add(new Point3D(0, 	size, 	0,		0, texture.getHeight()));
-    	/*4*/vertices.add(new Point3D(0, 	0, 		size,	0, texture.getHeight()));
-    	/*5*/vertices.add(new Point3D(size, 0, 		size,	0, 0));        
-    	/*6*/vertices.add(new Point3D(size, size, 	size,	texture.getWidth(), 0));
-    	/*7*/vertices.add(new Point3D(0, 	size,	size,	texture.getWidth(), texture.getHeight()));        
-        
-    	/*C*/vertices.add(centroid = new Point3D(size/2, size/2, size/2));
-    	
+    	/*0*/vertices.add(new Point3D(-size/2, 	-size/2, 	-size/2, 	0, 0));
+    	/*1*/vertices.add(new Point3D(size/2, 	-size/2, 	-size/2, 	texture.getWidth(), 0));
+    	/*2*/vertices.add(new Point3D(size/2, 	size/2, 	-size/2, 	texture.getWidth(), texture.getHeight()));
+    	/*3*/vertices.add(new Point3D(-size/2, 	size/2, 	-size/2,	0, texture.getHeight()));
+    	/*4*/vertices.add(new Point3D(-size/2, 	-size/2, 	size/2,		0, texture.getHeight()));
+    	/*5*/vertices.add(new Point3D(size/2,	-size/2, 	size/2,		0, 0));        
+    	/*6*/vertices.add(new Point3D(size/2, 	size/2, 	size/2,		texture.getWidth(), 0));
+    	/*7*/vertices.add(new Point3D(-size/2, 	size/2,	 	size/2,		texture.getWidth(), texture.getHeight()));        
+        //centroid
+    	/*8*/vertices.add(new Point3D(0, 0, 0));    	
     	
     	
 
-//        for (int i = 0; i < 4; i++) { // hrany
-//            indicesLine.add(i); indicesLine.add((i + 1) % 4);
-//            indicesLine.add(i); indicesLine.add(i + 4);
-//            indicesLine.add(i + 4); indicesLine.add((i + 1) % 4 + 4);
-//        }
+        for (int i = 0; i < 4; i++) { // hrany
+            indicesLine.add(i); indicesLine.add((i + 1) % 4);
+            indicesLine.add(i); indicesLine.add(i + 4);
+            indicesLine.add(i + 4); indicesLine.add((i + 1) % 4 + 4);
+        }
 
         // plochy
         indicesTriangle.add(0); indicesTriangle.add(1); indicesTriangle.add(2); 
@@ -66,7 +65,7 @@ public class Cube extends SolidBase {
     }
     
     public Point3D getCentroid() {
-    	return centroid;
+    	return vertices.get(8);
     }
 
 	@Override
