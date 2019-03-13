@@ -20,16 +20,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import solids.Axis;
-import solids.AxisWithArrows;
 import solids.Cube;
-import solids.Curve;
 import solids.Plate;
 import solids.Solid;
+import solids.Sphere;
 import solids.Spire;
-import solids.Triangel;
-import transforms.*;
-import utils.Transformer;
+import transforms.Camera;
+import transforms.Mat4;
+import transforms.Mat4OrthoRH;
+import transforms.Mat4PerspRH;
+import transforms.Mat4RotX;
+import transforms.Mat4RotY;
+import transforms.Mat4RotZ;
+import transforms.Mat4Scale;
+import transforms.Mat4Transl;
+import transforms.Vec3D;
 
 public class App extends JFrame {
 
@@ -60,7 +65,7 @@ public class App extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setSize(width, height);
-        setTitle("Drátový model");
+        setTitle("Z Buffer");
         panel = new JPanel();
         add(panel);
         solids = new ArrayList<>();
@@ -124,20 +129,20 @@ public class App extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        camera = camera.forward(0.1);
+                    case KeyEvent.VK_W:
+                        camera = camera.forward(0.15);
                         break;
-                    case KeyEvent.VK_DOWN:
-                        camera = camera.backward(0.1);
+                    case KeyEvent.VK_S:
+                        camera = camera.backward(0.15);
                         break;
-                    case KeyEvent.VK_LEFT:
-                        camera = camera.left(0.1);
+                    case KeyEvent.VK_A:
+                        camera = camera.left(0.15);
                         break;
-                    case KeyEvent.VK_RIGHT:
-                        camera = camera.right(0.1);
+                    case KeyEvent.VK_D:
+                        camera = camera.right(0.15);
                         break;
                         
-                        
+                      
                     case KeyEvent.VK_P: {
                     	drawPersp = !drawPersp;
 						break;
@@ -183,50 +188,46 @@ public class App extends JFrame {
     private static final Random random = new Random();	
 	public static double randomDouble(double limit) {
 		return Math.abs(2.0*limit) * random.nextDouble() - limit;
-	}    
-	
-	private Solid axisX;
-	private Solid axisY;
-	private Solid axisZ;
-	
-	private Solid spireZ;
-	private Solid spireX;
-	private Solid spireY;
+	}   
+
 	
     private void initSolids() {
     	BufferedImage texture = loadTexture("texture-metal");
-    	axisX = new Cube(1, texture);
-    	axisX.transform(new Mat4Scale(3.0, 0.05, 0.05).mul(new Mat4Transl(1.5, 0, 0)));
+    	//axis
+    	//x
+    	solids.add(new Cube(1, texture).transform(new Mat4Scale(3.0, 0.05, 0.05).mul(new Mat4Transl(1.5, 0, 0))));
+    	solids.add(new Spire().transform(new Mat4RotY(Math.PI / 2.0).mul(new Mat4Scale(0.3).mul(new Mat4Transl(3.0, 0, 0)))));
+    	//y   	
+    	solids.add(new Cube(1, texture).transform(new Mat4Scale(0.05, 3.0, 0.05).mul(new Mat4Transl(0, 1.5, 0))));
+    	solids.add(new Spire().transform(new Mat4RotX(-Math.PI / 2.0).mul(new Mat4Scale(0.3).mul(new Mat4Transl(0, 3.0, 0)))));
+    	//z
+    	solids.add(new Cube(1, texture).transform(new Mat4Scale(0.05, 0.05, 3.0).mul(new Mat4Transl(0, 0, 1.5))));
+    	solids.add(new Spire().transform(new Mat4Scale(0.3).mul(new Mat4Transl(0, 0, 3.0))));
     	
-    	axisY = new Cube(1, texture);
-    	axisY.transform(new Mat4Scale(0.05, 3.0, 0.05).mul(new Mat4Transl(0, 1.5, 0)));
-    	
-    	axisZ = new Cube(1, texture);
-    	axisZ.transform(new Mat4Scale(0.05, 0.05, 3.0).mul(new Mat4Transl(0, 0, 1.5)));
-    	
-    	spireZ = new Spire();
-    	spireZ.transform(new Mat4Scale(0.3).mul(new Mat4Transl(0, 0, 3.0)));
-    	
-    	spireX = new Spire();
-    	spireX.transform(new Mat4RotY(Math.PI / 2.0).mul(new Mat4Scale(0.3).mul(new Mat4Transl(3.0, 0, 0))));
-    	
-    	spireY = new Spire();
-    	spireY.transform(new Mat4RotX(-Math.PI / 2.0).mul(new Mat4Scale(0.3).mul(new Mat4Transl(0, 3.0, 0))));
+
     	
     	
-    	solids.add(new Plate());
+    	//solids.add(new Plate());    	
     	
-    	//Triangel triangel = new Triangel(1, loadTexture("texture-metal"));
-    	
-        Cube cube = new Cube(1, texture);
+        Cube cube = new Cube(1, texture);        
         cube.transform(new Mat4Transl(2, 2, 2));
-        
-        rot = rotation(cube);
-        
+        cube.setTransformation(
+        	new Mat4Transl(-cube.getCentroid().getX(), -cube.getCentroid().getY(), -cube.getCentroid().getZ()).mul(	
+			new Mat4RotZ(randomDouble(Math.PI / 100))).mul(
+			new Mat4RotY(randomDouble(Math.PI / 100))).mul(
+			new Mat4RotX(randomDouble(Math.PI / 100))).mul(
+			new Mat4Transl(cube.getCentroid().getX(), cube.getCentroid().getY(), cube.getCentroid().getZ())));               
         solids.add(cube);
         
-        coons();
-        
+        Sphere sphere = new Sphere();
+        sphere.transform(new Mat4Scale(3.0, 3.0, 3.0).mul(new Mat4Transl(-2, 0, 0)));
+        sphere.setTransformation(new Mat4RotZ(randomDouble(Math.PI / 100)));
+//			new Mat4RotZ(randomDouble(Math.PI / 100)).mul(
+//			new Mat4RotY(randomDouble(Math.PI / 100))).mul(
+//			new Mat4RotX(randomDouble(Math.PI / 100)))
+//		);
+				
+        solids.add(sphere);
 //        int count = 5;
 //        for (int i = 0; i < count; i++) {
 //            Cube cube = new Cube(1);
@@ -273,14 +274,9 @@ public class App extends JFrame {
         scene.clear();
         scene.setView(camera.getViewMatrix());
 
-        //solids.forEach(s->s.transform(rot));
+        solids.forEach(s->s.transform());
         
-        scene.drawWireFrame(axisX);
-        scene.drawWireFrame(axisY); 
-        scene.drawWireFrame(axisZ); 
-        scene.drawWireFrame(spireZ); 
-        scene.drawWireFrame(spireX); 
-        scene.drawWireFrame(spireY); 
+
         
         for (Solid solid : solids) {
         	if (this.drawMode) {
@@ -324,164 +320,5 @@ public class App extends JFrame {
 		g.drawString(s, 70, 90);
 		g.drawString("[C] - reset, [1,2] - show objects, [H]elp", 70, 110);
 		g.drawString("[space][R/F] - 1st/3rd person, distance", 70, 130);		
-	}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    private Curve curve(Mat4 baseMat, Point3D[] points, Color color) {
-		Cubic cubic = new Cubic(baseMat, points);
-		List<Point3D> result = new ArrayList<>();
-		for (double d=0.0; d<=2.0; d+=0.01) {
-			result.add(cubic.compute(d));
-		}
-		return new Curve(result, color);
-	}
-    
-    private void coons() {
-		List<Point3D> points = new ArrayList<>();
-		points.add(new Point3D(0, -3, -2));
-		points.add(new Point3D(0, 0, -1));
-		points.add(new Point3D(0, 3, -2));
-		points.add(new Point3D(0, 6, -1));
-		
-		Color color = Color.RED;
-		
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(0),
-			points.get(1)
-		}, color));		
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(1),
-			points.get(2)
-    	}, color));				
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(1),
-			points.get(2),
-			points.get(3)
-    	}, color));		
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(1),
-			points.get(2),
-			points.get(3),
-			points.get(3)
-    	}, color));		
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(2),
-			points.get(3),
-			points.get(3),
-			points.get(3)
-    	}, color));		
-    	
-    	points = new ArrayList<>();
-		points.add(new Point3D(1, -3, -2));
-		points.add(new Point3D(1, 0, -1));
-		points.add(new Point3D(1, 3, -2));
-		points.add(new Point3D(1, 6, -1));
-		
-		color = Color.GREEN;
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(0),
-			points.get(1)
-    	}, color));	
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(1),
-			points.get(2)
-    	}, color));			
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(1),
-			points.get(2),
-			points.get(3)
-    	}, color));	
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(1),
-			points.get(2),
-			points.get(3),
-			points.get(3)
-    	}, color));	
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(2),
-			points.get(3),
-			points.get(3),
-			points.get(3)
-    	}, color));	
-    	
-    	
-    	points = new ArrayList<>();
-    	points.add(new Point3D(2, -3, -2));
-		points.add(new Point3D(2, 0, -1));
-		points.add(new Point3D(2, 3, -2));
-		points.add(new Point3D(2, 6, -1));
-		
-		color = Color.BLUE;
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(0),
-			points.get(1)
-    	}, color));			
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(1),
-			points.get(2)
-    	}, color));			
-//    	solids.add(curve(Cubic.COONS, new Point3D[]{
-//			points.get(0),
-//			points.get(1),
-//			points.get(2),
-//			points.get(3)
-//		}));
-//    	solids.add(curve(Cubic.COONS, new Point3D[]{
-//			points.get(1),
-//			points.get(2),
-//			points.get(3),
-//			points.get(3)
-//		}));
-//    	solids.add(curve(Cubic.COONS, new Point3D[]{
-//			points.get(2),
-//			points.get(3),
-//			points.get(3),
-//			points.get(3)
-//		}));
-    	
-    	
-    	points = new ArrayList<>();
-    	points.add(new Point3D(3, -3, -2));
-		points.add(new Point3D(3, 0, -1));
-		points.add(new Point3D(3, 3, -2));
-		points.add(new Point3D(3, 6, -1));
-		
-		color = Color.YELLOW;
-    	solids.add(curve(Cubic.COONS, new Point3D[]{
-			points.get(0),
-			points.get(0),
-			points.get(0),
-			points.get(1)
-    	}, color));			
-
 	}
 }

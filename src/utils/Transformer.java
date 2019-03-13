@@ -1,17 +1,16 @@
 package utils;
 
-import solids.Axis;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Optional;
+
 import solids.Primitive;
 import solids.Solid;
 import transforms.Mat4;
 import transforms.Mat4Identity;
 import transforms.Point3D;
 import transforms.Vec3D;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Optional;
 
 public class Transformer {
 
@@ -38,11 +37,9 @@ public class Transformer {
     public void drawWireFrame(Solid solid) {
 
         Mat4 matFinal;
-        if (solid instanceof Axis) {
-            matFinal = view.mul(projection);
-        } else {
-            matFinal = model.mul(view).mul(projection);
-        }
+
+        
+        matFinal = model.mul(view).mul(projection);
 
         List<Integer> indices = solid.getIndices(Primitive.LINES);
         for (int i = 0; i < indices.size(); i += 2) {

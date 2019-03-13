@@ -1,5 +1,7 @@
 package solids;
 
+import transforms.Mat4;
+import transforms.Mat4Identity;
 import transforms.Point3D;
 
 import java.util.ArrayList;
@@ -10,7 +12,9 @@ public abstract class SolidBase implements Solid {
     protected List<Point3D> vertices;
     protected List<Integer> indicesLine;
     protected List<Integer> indicesTriangle;
-
+    
+    private Mat4 transformation = new Mat4Identity();
+    
     public SolidBase() {
         vertices = new ArrayList<>();
         indicesLine = new ArrayList<>();
@@ -30,4 +34,14 @@ public abstract class SolidBase implements Solid {
             return indicesTriangle;
         }
     }
+    
+    @Override
+    public void setTransformation(Mat4 transformation) {
+		this.transformation = transformation;
+	}    
+    
+    @Override
+   	public Mat4 getTransformation() {
+   		return transformation;
+   	}
 }
