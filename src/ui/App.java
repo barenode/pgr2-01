@@ -207,7 +207,7 @@ public class App extends JFrame {
 
     	
     	
-    	//solids.add(new Plate());    	
+    	solids.add(new Plate());    	
     	
         Cube cube = new Cube(1, texture);        
         cube.transform(new Mat4Transl(2, 2, 2));

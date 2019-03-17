@@ -51,7 +51,7 @@ public class Scene {
             p2 = p2.mul(matFinal);
             p3 = p3.mul(matFinal);
             
-            renderTriangle(p1, p2, p3, solid.getColorByTriangleVertice(i), solid.getTexture());
+            renderTriangle(p1, p2, p3, solid.getColorByTriangleVertice(i));
         }
     }
 	
@@ -71,11 +71,42 @@ public class Scene {
         }
     }
 
-	public void renderTriangle(Point3D pA, Point3D pB, Point3D pC, int color, BufferedImage texture) {		
-		drawTriangle(pA, pB, pC, color, texture);
+	public void renderTriangle(Point3D a, Point3D b, Point3D c, int color) {
+		Point3D p;
+		if (a.w > b.w) {
+			p = a; a = b; b = p;			
+		}
+		if (b.w > c.w) {
+			p = b; b = c; c = p;		
+		}
+		if (a.w > b.w) {
+			p = a; a = b; b = p;						
+		}
+		if (c.w >= this.wmin) {
+			Point3D nva;
+			Point3D nvb;
+			double t;
+			if (b.w < this.wmin) {
+				t = (this.wmin - c.w) / (a.w - c.w);
+				nva = a.mul(t).add(c.mul(1.0D - t));
+				t = (this.wmin - c.w) / (b.w - c.w);
+				nvb = b.mul(t).add(c.mul(1.0D - t));
+				this.drawTriangle(nva, nvb, c, color);
+			} else if (a.w < this.wmin) {
+				t = (this.wmin - b.w) / (a.w - b.w);
+				nva = a.mul(t).add(b.mul(1.0D - t));
+				t = (this.wmin - c.w) / (a.w - c.w);
+				nvb = a.mul(t).add(c.mul(1.0D - t));
+				this.drawTriangle(nva, nvb, c, color);
+				this.drawTriangle(nva, b, c, color);
+			} else {
+				this.drawTriangle(a, b, c, color);
+			}
+		}
+		//drawTriangle(pA, pB, pC, color, texture);
 	}
 
-	private void drawTriangle(Point3D pA, Point3D pB, Point3D pC, int color, BufferedImage texture) {		
+	private void drawTriangle(Point3D pA, Point3D pB, Point3D pC, int color) {		
 		Vec3D a = pA.dehomog().get();
 		Vec3D b = pB.dehomog().get();
 		Vec3D c = pC.dehomog().get();

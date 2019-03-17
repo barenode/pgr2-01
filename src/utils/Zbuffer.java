@@ -1,9 +1,6 @@
 package utils;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import transforms.Point3D;
@@ -44,49 +41,38 @@ public class Zbuffer {
 		}
 	}
 	
-	public void renderTriangle(Point3D pA, Point3D pB, Point3D pC, int color) {
-//		Point3D p;
-//		if (pA.w > pB.w) {
-//			p = pA;
-//			pA = pB;
-//			pB = p;
-//		}
-//
-//		if (pB.w > pC.w) {
-//			p = pB;
-//			pB = pC;
-//			pC = p;
-//		}
-//
-//		if (pA.w > pB.w) {
-//			p = pA;
-//			pA = pB;
-//			pB = p;
-//		}
-//
-//		if (pC.w >= this.wmin) {
-//			Point3D nva;
-//			Point3D nvb;
-//			double t;
-//			if (pB.w < this.wmin) {
-//				t = (this.wmin - pC.w) / (pA.w - pC.w);
-//				nva = pA.mul(t).add(pC.mul(1.0D - t));
-//				t = (this.wmin - pC.w) / (pB.w - pC.w);
-//				nvb = pB.mul(t).add(pC.mul(1.0D - t));
-//				this.drawTriangle(nva, nvb, pC, color, this.mode);
-//			} else if (pA.w < this.wmin) {
-//				t = (this.wmin - pB.w) / (pA.w - pB.w);
-//				nva = pA.mul(t).add(pB.mul(1.0D - t));
-//				t = (this.wmin - pC.w) / (pA.w - pC.w);
-//				nvb = pA.mul(t).add(pC.mul(1.0D - t));
-//				this.drawTriangle(nva, nvb, pC, color, this.mode);
-//				this.drawTriangle(nva, pB, pC, color, this.mode);
-//			} else {
-//				this.drawTriangle(pA, pB, pC, color, this.mode);
-//			}
-//		}
-		
-		drawTriangle(pA, pB, pC, color);
+	public void renderTriangle(Point3D a, Point3D b, Point3D c, int color) {
+		Point3D p;
+		if (a.w > b.w) {
+			p = a; a = b; b = p;			
+		}
+		if (b.w > c.w) {
+			p = b; b = c; c = p;		
+		}
+		if (a.w > b.w) {
+			p = a; a = b; b = p;						
+		}
+		if (c.w >= this.wmin) {
+			Point3D nva;
+			Point3D nvb;
+			double t;
+			if (b.w < this.wmin) {
+				t = (this.wmin - c.w) / (a.w - c.w);
+				nva = a.mul(t).add(c.mul(1.0D - t));
+				t = (this.wmin - c.w) / (b.w - c.w);
+				nvb = b.mul(t).add(c.mul(1.0D - t));
+				this.drawTriangle(nva, nvb, c, color);
+			} else if (a.w < this.wmin) {
+				t = (this.wmin - b.w) / (a.w - b.w);
+				nva = a.mul(t).add(b.mul(1.0D - t));
+				t = (this.wmin - c.w) / (a.w - c.w);
+				nvb = a.mul(t).add(c.mul(1.0D - t));
+				this.drawTriangle(nva, nvb, c, color);
+				this.drawTriangle(nva, b, c, color);
+			} else {
+				this.drawTriangle(a, b, c, color);
+			}
+		}
 	}
 
 	private void drawTriangle(Point3D pA, Point3D pB, Point3D pC, int color) {		
