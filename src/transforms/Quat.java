@@ -378,8 +378,8 @@ public class Quat {
 
 		double s = Math.sqrt(x * x + y * y + z * z);
 		if (s < 0.0001d)
-			return new Point3D(angle, 1, 0, 0, 0, 0);
-		return new Point3D(angle, x / s, y / s, z / s, 0, 0);
+			return new Point3D(angle, 1, 0, 0);
+		return new Point3D(angle, x / s, y / s, z / s);
 	}
 
 	/**

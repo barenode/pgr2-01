@@ -1,17 +1,17 @@
-package ui;
+package pgr2;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import solids.Primitive;
-import solids.Solid;
+import pgr2.solids.Primitive;
+import pgr2.solids.Solid;
 import transforms.Mat4;
 import transforms.Mat4Identity;
 import transforms.Point3D;
 import transforms.Vec3D;
 
-public class Scene {
+public class Renderer {
 	
 	private final BufferedImage image;
 	private final double[][] zBuffer;
@@ -21,7 +21,7 @@ public class Scene {
     private Mat4 view;
     private Mat4 projection;    
 
-	public Scene(BufferedImage image) {
+	public Renderer(BufferedImage image) {
 		this.image = image;
 		this.zBuffer = new double[width()][height()];
 		this.model = new Mat4Identity();
@@ -103,7 +103,6 @@ public class Scene {
 				this.drawTriangle(a, b, c, color);
 			}
 		}
-		//drawTriangle(pA, pB, pC, color, texture);
 	}
 
 	private void drawTriangle(Point3D pA, Point3D pB, Point3D pC, int color) {		
@@ -157,14 +156,7 @@ public class Scene {
 			double x2;
 			double z1;
 			double z2;
-			double z;
-			
-			double u1;
-			double u2;
-			double u;
-			double v1;
-			double v2;
-			double v;
+			double z;			
 			
 			int y;
 			int x;
@@ -178,16 +170,9 @@ public class Scene {
 				z1 = a.z * (1.0D - s1) + b.z * s1;
 				z2 = a.z * (1.0D - s2) + c.z * s2;
 				
-				u1 = a.u * (1.0D - s1) + b.u * s1;
-				u2 = a.u * (1.0D - s2) + c.u * s2;
-				v1 = a.v * (1.0D - s1) + b.v * s1;
-				v2 = a.v * (1.0D - s2) + c.v * s2;
-				
 				if (x1 > x2) {
 					t = x1; x1 = x2; x2 = t;					
 					t = z1; z1 = z2; z2 = t;
-					t = u1; u1 = u2; u2 = t;
-					t = v1; v1 = v2; v2 = t;
 				}
 
 				for (x = Math.max((int) x1 + 1, 0); (double) x <= Math.min(x2, (double) (width() - 1)); ++x) {
@@ -195,11 +180,8 @@ public class Scene {
 					z = z1 * (1.0D - t) + z2 * t;					
 					
 					if (zBuffer[x][y] > z && z > 0.0D) {
-						u = u1 * (1.0D - t) + u2 * t;
-						v = v1 * (1.0D - t) + v2 * t;
 						zBuffer[x][y] = z;					
 						image.setRGB(x, y, (new Color(color)).getRGB());
-						//image.setRGB(x, y, texture.getRGB((int)u, (int)v));
 					}
 				}
 			}
@@ -211,29 +193,19 @@ public class Scene {
 				x1 = b.x * (1.0D - s1) + c.x * s1;
 				x2 = a.x * (1.0D - s2) + c.x * s2;
 				z1 = b.z * (1.0D - s1) + c.z * s1;
-				z2 = a.z * (1.0D - s2) + c.z * s2;
-				
-				u1 = b.u * (1.0D - s1) + c.u * s1;
-				u2 = a.u * (1.0D - s2) + c.u * s2;
-				v1 = b.v * (1.0D - s1) + c.v * s1;
-				v2 = a.v * (1.0D - s2) + c.v * s2;
+				z2 = a.z * (1.0D - s2) + c.z * s2;				
 				
 				if (x1 > x2) {
 					t = x1; x1 = x2; x2 = t;					
 					t = z1; z1 = z2; z2 = t;
-					t = u1; u1 = u2; u2 = t;
-					t = v1; v1 = v2; v2 = t;
 				}
 
 				for (x = Math.max((int) x1 + 1, 0); (double) x <= Math.min(x2, (double)(width()-1)); ++x) {
 					t = ((double) x - x1) / (x2 - x1);
 					z = z1 * (1.0D - t) + z2 * t;
-					if (zBuffer[x][y] > z && z > 0.0D) {
-						u = u1 * (1.0D - t) + u2 * t;
-						v = v1 * (1.0D - t) + v2 * t;
+					if (zBuffer[x][y] > z && z > 0.0D) {	
 						zBuffer[x][y] = z;
 						image.setRGB(x, y, (new Color(color)).getRGB());
-						//image.setRGB(x, y, texture.getRGB((int)u, (int)v));
 					}
 				}
 			}

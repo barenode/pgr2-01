@@ -1,4 +1,4 @@
-package solids;
+package pgr2.solids;
 
 import transforms.Mat4;
 import transforms.Mat4Identity;

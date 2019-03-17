@@ -1,7 +1,6 @@
-package solids;
+package pgr2.solids;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 import transforms.Point3D;
 
@@ -25,15 +24,27 @@ public class Sphere extends SolidBase {
 		vertices.add(new Point3D(0.0, 0.0, 0.5)); 
 		vertices.add(new Point3D(0.0, 0.0, -0.5)); 
 		
-		connectPoints(0, 11, 12);
+		connectPoints(0, 11, 12);	
+		indicesTriangle.add(23); indicesTriangle.add(12); indicesTriangle.add(11); 
+		indicesTriangle.add(12); indicesTriangle.add(11); indicesTriangle.add(0); 
 		
 		connectPoints(0, 11, 24);
+		indicesTriangle.add(35); indicesTriangle.add(24); indicesTriangle.add(11); 
+		indicesTriangle.add(24); indicesTriangle.add(11); indicesTriangle.add(0); 
 		
 		connectPoints(12, 23, 24);
+		indicesTriangle.add(47); indicesTriangle.add(23); indicesTriangle.add(36); 
+		indicesTriangle.add(23); indicesTriangle.add(36); indicesTriangle.add(12); 
+		
 		connectPoints(24, 35, 24);
+		indicesTriangle.add(59); indicesTriangle.add(24); indicesTriangle.add(35); 
+		indicesTriangle.add(24); indicesTriangle.add(59); indicesTriangle.add(48); 
 		
 		connectWithPoint(36, 47, 60);
+		indicesTriangle.add(47); indicesTriangle.add(36); indicesTriangle.add(60); 
+		
 		connectWithPoint(48, 59, 61);
+		indicesTriangle.add(59); indicesTriangle.add(48); indicesTriangle.add(61); 
 		
 		vertices.add(new Point3D());		
 	}	
@@ -41,12 +52,6 @@ public class Sphere extends SolidBase {
 	@Override
 	public Point3D getCentroid() {
 		return vertices.get(vertices.size()-1);
-	}
-
-	@Override
-	public BufferedImage getTexture() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	protected void addCircle(double radius, double z) {
@@ -108,12 +113,10 @@ public class Sphere extends SolidBase {
 	
 	private Color getColor(int index) {
 		switch (index) {
-			case 0 : return Color.BLUE;
-			case 1 : return Color.CYAN;
-			case 2 : return Color.YELLOW;
-			case 3 : return Color.GREEN;
-			case 4 : return Color.RED; 
-			case 5 : return Color.ORANGE;
+			case 0 : return Color.YELLOW;
+			case 1 : return Color.RED;
+			case 2 : return Color.ORANGE;
+			case 3 : return Color.PINK;
 			default : throw new IllegalArgumentException("Unsupported inbdex: " + index);
 			
 		}

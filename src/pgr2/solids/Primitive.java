@@ -1,4 +1,4 @@
-package solids;
+package pgr2.solids;
 
 public enum Primitive {
 

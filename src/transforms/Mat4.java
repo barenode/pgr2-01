@@ -255,7 +255,7 @@ public class Mat4 {
 	 */
 	public Point3D getRow(final int row) {
 		assert(row >= 0 && row < 4);
-		return new Point3D(mat[row][0], mat[row][1], mat[row][2], mat[row][3], 0, 0);
+		return new Point3D(mat[row][0], mat[row][1], mat[row][2], mat[row][3]);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class Mat4 {
 	 */
 	public Point3D getColumn(final int column) {
 		assert(column >= 0 && column < 4);
-		return new Point3D(mat[0][column], mat[1][column], mat[2][column], mat[3][column], 0, 0);
+		return new Point3D(mat[0][column], mat[1][column], mat[2][column], mat[3][column]);
 	}
 
 	/**

@@ -13,14 +13,13 @@ import java.util.Optional;
 
 public class Point3D {
 	
-	public final double x, y, z, w, u, v;
-	public final double w1 = 1.0;
-	
+	public final double x, y, z, w;
+
 	/**
 	 * Creates a homogeneous point representing the origin 
 	 */
 	public Point3D() {
-		x = y = z = u = v = 0.0;
+		x = y = z = 0.0;
 		w = 1.0;
 	}
 
@@ -40,16 +39,6 @@ public class Point3D {
 		this.y = y;
 		this.z = z;
 		this.w = 1.0;
-		u = v = 0.0;
-	}
-	
-	public Point3D(final double x, final double y, final double z, final double u, final double v) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.w = 1.0;
-		this.u = u;
-		this.v = v;
 	}
 
 	/**
@@ -64,13 +53,11 @@ public class Point3D {
 	 * @param w
 	 *            homogeneous w coordinate
 	 */
-	public Point3D(final double x, final double y, final double z, final double w, final double u, final double v) {
+	public Point3D(final double x, final double y, final double z, final double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.w = w;
-		this.u = u;
-		this.v = v;
 	}
 
 	/**
@@ -80,13 +67,11 @@ public class Point3D {
 	 * @param v
 	 *            affine coordinates vector (vector from origin to the point)
 	 */
-	public Point3D(final Vec3D vec) {
-		this.x = vec.getX();
-		this.y = vec.getY();
-		this.z = vec.getZ();
+	public Point3D(final Vec3D v) {
+		this.x = v.getX();
+		this.y = v.getY();
+		this.z = v.getZ();
 		this.w = 1.0;
-		this.u = vec.getU();
-		this.v = vec.getV();
 	}
 
 	/**
@@ -100,8 +85,6 @@ public class Point3D {
 		this.y = p.y;
 		this.z = p.z;
 		this.w = p.w;
-		this.u = p.u;
-		this.v = p.v;
 	}
 
 	/**
@@ -116,7 +99,6 @@ public class Point3D {
 	public Point3D(final Point2D p, final double z) {
 		x = p.getX();
 		y = p.getY();
-		u = v = 0.0f;
 		this.z = z;
 		w = p.getW();
 	}
@@ -134,8 +116,6 @@ public class Point3D {
 		y = array[1];
 		z = array[2];
 		w = array[3];
-		u = array[4];
-		v = array[5];
 	}
 	
 
@@ -174,18 +154,6 @@ public class Point3D {
 	public double getW() {
 		return w;
 	}
-	
-	public double getU() {
-		return u;
-	}
-
-	public double getV() {
-		return v;
-	}
-	
-	public double getW1() {
-		return w1;
-	}
 
 	
 	/**
@@ -197,7 +165,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D withX(double x) {
-		return new Point3D(x, this.getY(), this.getZ(), this.getW(), u, v);
+		return new Point3D(x, this.getY(), this.getZ(), this.getW());
 	}
 	
 	/**
@@ -209,7 +177,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D withY(double y) {
-		return new Point3D(this.getX(), y, this.getZ(), this.getW(), u, v);
+		return new Point3D(this.getX(), y, this.getZ(), this.getW());
 	}
 	
 	/**
@@ -221,7 +189,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D withZ(double z) {
-		return new Point3D(this.getX(), this.getY(), z, this.getW(), u, v);
+		return new Point3D(this.getX(), this.getY(), z, this.getW());
 	}
 	
 	/**
@@ -233,7 +201,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D withW(double w) {
-		return new Point3D(this.getX(), this.getY(), this.getZ(), w, u, v);
+		return new Point3D(this.getX(), this.getY(), this.getZ(), w);
 	}
 	
 	/**
@@ -253,8 +221,7 @@ public class Point3D {
 			mat.mat[0][2] * x + mat.mat[1][2] * y + mat.mat[2][2] * z
 				+ mat.mat[3][2] * w,
 			mat.mat[0][3] * x + mat.mat[1][3] * y + mat.mat[2][3] * z
-				+ mat.mat[3][3] * w,
-			u, v);
+				+ mat.mat[3][3] * w);
 	}
 	
 	/**
@@ -279,7 +246,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D add(final Point3D p) {
-		return new Point3D(x + p.x, y + p.y, z + p.z, w + p.w, u, v);
+		return new Point3D(x + p.x, y + p.y, z + p.z, w + p.w);
 	}
 
 	/**
@@ -290,7 +257,7 @@ public class Point3D {
 	 * @return new Point3D instance
 	 */
 	public Point3D mul(final double d) {
-		return new Point3D(x * d, y * d, z * d, w * d, u, v);
+		return new Point3D(x * d, y * d, z * d, w * d);
 	}
 	
 	/**
@@ -304,7 +271,7 @@ public class Point3D {
 	public Optional<Vec3D> dehomog() {
 		if (w == 0.0)
 			return Optional.empty();
-		return Optional.of(new Vec3D(x / w, y / w, z / w, u / w, v / w, w1 / w));
+		return Optional.of(new Vec3D(x / w, y / w, z / w));
 	}
 
 	/**
@@ -314,7 +281,7 @@ public class Point3D {
 	 * @return new Vec3D instance
 	 */
 	public Vec3D ignoreW() {
-		return new Vec3D(x, y, z, u, v, 1.0f);
+		return new Vec3D(x, y, z);
 	}
 	
 	/**

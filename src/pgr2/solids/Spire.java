@@ -1,7 +1,6 @@
-package solids;
+package pgr2.solids;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 import transforms.Point3D;
 
@@ -57,11 +56,5 @@ public class Spire extends SolidBase {
 			default : throw new IllegalArgumentException("Unsupported inbdex: " + index);
 			
 		}
-	}
-
-	@Override
-	public BufferedImage getTexture() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

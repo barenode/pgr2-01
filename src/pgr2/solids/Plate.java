@@ -1,7 +1,6 @@
-package solids;
+package pgr2.solids;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,15 +86,9 @@ public class Plate extends SolidBase {
 			
 		}
 	}
-
 	
 	@Override
 	public Point3D getCentroid() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public BufferedImage getTexture() {
-		return null;
 	}	
 }
